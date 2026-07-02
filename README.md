@@ -47,8 +47,8 @@ A simple Bash script that automates the setup of a C++ and Python development en
 Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/YouanesAttia/dev-setup
+cd dev-setup
 ```
 
 Make the script executable:
