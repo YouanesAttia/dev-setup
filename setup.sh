@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
+
+error_handler() {
+    echo "[ERROR] Script failed at line $1"
+    exit 1
+}
+trap 'error_handler $LINENO' ERR
 
 # Chech the OS
 if [[ ! -f /etc/os-release ]]; then
@@ -16,6 +22,18 @@ if [[ "$ID" != "ubuntu" && "$ID" != "debian" ]]; then
 fi
 
 echo "Detected: $PRETTY_NAME"
+
+# Check for sudo/root permissions
+if [ "$EUID" -ne 0 ]; then
+    # Check if sudo is installed if not running as root
+    if ! command -v sudo &> /dev/null; then
+        echo "[ERROR] This script requires sudo, but it is not installed."
+        exit 1
+    fi
+    SUDO="sudo"
+else
+    SUDO=""
+fi
 
 #Install packages
 echo "Updating package lists.."
